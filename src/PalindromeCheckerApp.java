@@ -1,17 +1,22 @@
 public class PalindromeCheckerApp {
+
     public static void main(String[] args) {
-        String original = "madam";
+
+        String input = "madam";
         String reversed = "";
 
-        for(int i = original.length() - 1; i >= 0; --i) {
-            reversed = reversed + original.charAt(i);
+
+        for (int i = input.length() - 1; i >= 0; i--) {
+            reversed += input.charAt(i);
         }
 
-        if (original.equals(reversed)) {
-            System.out.println("The string '" + original + "' is a palindrome.");
+
+        if (input.equals(reversed)) {
+            System.out.println("Input: " + input);
+            System.out.println("Is Palindrome? true");
         } else {
-            System.out.println("The string '" + original + "' is NOT a palindrome.");
+            System.out.println("Input: " + input);
+            System.out.println("Is Palindrome? false");
         }
-
     }
 }
