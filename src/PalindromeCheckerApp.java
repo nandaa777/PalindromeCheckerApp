@@ -1,4 +1,7 @@
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class PalindromeCheckerApp {
 
@@ -6,56 +9,96 @@ public class PalindromeCheckerApp {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("=================================");
-        System.out.println(" Palindrome Checker - UC11");
-        System.out.println(" Object-Oriented Service Version");
-        System.out.println("=================================");
-
-        System.out.print("Enter a string: ");
+        System.out.println("Enter a string to check if it is a palindrome:");
         String input = scanner.nextLine();
 
-        // Create object of service class
-        PalindromeChecker checker = new PalindromeChecker();
+        System.out.println("Choose strategy:");
+        System.out.println("1. Stack Strategy");
+        System.out.println("2. Deque Strategy");
+        int choice = scanner.nextInt();
 
-        boolean result = checker.checkPalindrome(input);
+        PalindromeStrategy strategy;
+
+        // Inject strategy at runtime
+        if (choice == 1) {
+            strategy = new StackStrategy();
+        } else {
+            strategy = new DequeStrategy();
+        }
+
+        PalindromeService service = new PalindromeService(strategy);
+
+        boolean result = service.check(input);
 
         if (result) {
-            System.out.println("Result: The given string is a Palindrome.");
+            System.out.println("✅ The string is a Palindrome!");
         } else {
-            System.out.println("Result: The given string is NOT a Palindrome.");
+            System.out.println("❌ The string is NOT a Palindrome.");
         }
 
         scanner.close();
     }
 }
 
-// Service class following OOP principles
-class PalindromeChecker {
+// Strategy Interface
+interface PalindromeStrategy {
+    boolean isPalindrome(String input);
+}
 
-    // Public method exposed to user
-    public boolean checkPalindrome(String input) {
+// Concrete Strategy 1: Stack-based
+class StackStrategy implements PalindromeStrategy {
 
-        if (input == null) {
-            return false;
+    @Override
+    public boolean isPalindrome(String input) {
+
+        Stack<Character> stack = new Stack<>();
+
+        for (int i = 0; i < input.length(); i++) {
+            stack.push(input.charAt(i));
         }
 
-        return isPalindrome(input);
-    }
-
-    // Private internal logic (Encapsulation)
-    private boolean isPalindrome(String str) {
-
-        int start = 0;
-        int end = str.length() - 1;
-
-        while (start < end) {
-            if (str.charAt(start) != str.charAt(end)) {
+        for (int i = 0; i < input.length(); i++) {
+            if (input.charAt(i) != stack.pop()) {
                 return false;
             }
-            start++;
-            end--;
         }
 
         return true;
+    }
+}
+
+// Concrete Strategy 2: Deque-based
+class DequeStrategy implements PalindromeStrategy {
+
+    @Override
+    public boolean isPalindrome(String input) {
+
+        Deque<Character> deque = new ArrayDeque<>();
+
+        for (int i = 0; i < input.length(); i++) {
+            deque.addLast(input.charAt(i));
+        }
+
+        while (deque.size() > 1) {
+            if (deque.removeFirst() != deque.removeLast()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+
+// Context / Service class
+class PalindromeService {
+
+    private PalindromeStrategy strategy;
+
+    public PalindromeService(PalindromeStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public boolean check(String input) {
+        return strategy.isPalindrome(input);
     }
 }
