@@ -18,14 +18,17 @@ public class PalindromeCheckerApp {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("=================================");
-        System.out.println(" Palindrome Checker - UC8");
-        System.out.println(" Linked List Based Approach");
+        System.out.println(" Palindrome Checker - UC8 & UC9");
+        System.out.println(" LinkedList + Recursive Approach");
         System.out.println("=================================");
 
         System.out.print("Enter a string: ");
         String input = scanner.nextLine();
 
-        // Convert string to linked list
+        // Recursive check
+        boolean recursiveResult = checkPalindromeRecursive(input, 0, input.length() - 1);
+
+        // Convert string to Linked List
         Node head = null;
         Node tail = null;
 
@@ -41,19 +44,30 @@ public class PalindromeCheckerApp {
             }
         }
 
-        boolean isPalindrome = checkPalindrome(head);
+        boolean linkedListResult = checkPalindromeLinkedList(head);
 
-        if (isPalindrome) {
-            System.out.println("Result: The given string is a Palindrome.");
-        } else {
-            System.out.println("Result: The given string is NOT a Palindrome.");
-        }
+        System.out.println("Recursive Result: " + recursiveResult);
+        System.out.println("LinkedList Result: " + linkedListResult);
 
         scanner.close();
     }
 
-    // Function to check palindrome using Linked List
-    public static boolean checkPalindrome(Node head) {
+    // Recursive function
+    public static boolean checkPalindromeRecursive(String str, int start, int end) {
+
+        if (start >= end) {
+            return true;
+        }
+
+        if (str.charAt(start) != str.charAt(end)) {
+            return false;
+        }
+
+        return checkPalindromeRecursive(str, start + 1, end - 1);
+    }
+
+    // Linked List palindrome check
+    public static boolean checkPalindromeLinkedList(Node head) {
 
         if (head == null || head.next == null)
             return true;
@@ -61,17 +75,14 @@ public class PalindromeCheckerApp {
         Node slow = head;
         Node fast = head;
 
-        // Find middle using fast & slow pointers
         while (fast != null && fast.next != null) {
             slow = slow.next;
             fast = fast.next.next;
         }
 
-        // Reverse second half
         Node secondHalf = reverse(slow);
         Node firstHalf = head;
 
-        // Compare both halves
         while (secondHalf != null) {
             if (firstHalf.data != secondHalf.data) {
                 return false;
