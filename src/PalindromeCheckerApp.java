@@ -7,30 +7,43 @@ public class PalindromeCheckerApp {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("=================================");
-        System.out.println(" Palindrome Checker - UC10");
-        System.out.println(" Case-Insensitive & Space-Ignored");
+        System.out.println(" Palindrome Checker - UC11");
+        System.out.println(" Object-Oriented Service Version");
         System.out.println("=================================");
 
         System.out.print("Enter a string: ");
         String input = scanner.nextLine();
 
-        // Normalize string (remove spaces and convert to lowercase)
-        String normalized = input
-                .replaceAll("\\s+", "")
-                .toLowerCase();
+        // Create object of service class
+        PalindromeChecker checker = new PalindromeChecker();
 
-        boolean isPalindrome = checkPalindrome(normalized);
+        boolean result = checker.checkPalindrome(input);
 
-        if (isPalindrome) {
-            System.out.println("Result: The given string is a Palindrome (ignoring case and spaces).");
+        if (result) {
+            System.out.println("Result: The given string is a Palindrome.");
         } else {
             System.out.println("Result: The given string is NOT a Palindrome.");
         }
 
         scanner.close();
     }
+}
 
-    public static boolean checkPalindrome(String str) {
+// Service class following OOP principles
+class PalindromeChecker {
+
+    // Public method exposed to user
+    public boolean checkPalindrome(String input) {
+
+        if (input == null) {
+            return false;
+        }
+
+        return isPalindrome(input);
+    }
+
+    // Private internal logic (Encapsulation)
+    private boolean isPalindrome(String str) {
 
         int start = 0;
         int end = str.length() - 1;
